@@ -1,0 +1,22 @@
+{
+  "name": "automatasts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "puppeteer": "^22.6.0"
+  }
+}
