@@ -1,10 +1,16 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
 
-router.get("/", (req, res) => {
-  res.send("Hello World!");
+import {
+  openWebCarrefour,
+  getProductsByNameCarrefour,
+} from "../core/carrefour.js";
+
+const router = Router();
+
+router.get("/", async (req, res) => {
+  const results = await openWebCarrefour();
+  res.send(results);
 });
-
 //mas rutas
 
-module.exports = router;
+export default router;
