@@ -1,9 +1,10 @@
 import puppeteer from "puppeteer";
+process.setMaxListeners(20);
 
 export async function getProductsByScroll(url: string) {
   const browser = await puppeteer.launch({
     headless: true,
-    slowMo: 100,
+    slowMo: 1000,
   });
 
   const page = await browser.newPage();
@@ -100,7 +101,7 @@ export async function getProductsByScroll(url: string) {
 export async function getProductsByNameCarrefour(name: string) {
   const browser = await puppeteer.launch({
     headless: true,
-    slowMo: 100,
+    slowMo: 1000,
   });
 
   const page = await browser.newPage();
@@ -166,7 +167,7 @@ export async function getProductsByNameCarrefour(name: string) {
 export async function openWebCarrefour() {
   const browser = await puppeteer.launch({
     headless: true,
-    slowMo: 100,
+    slowMo: 1000,
   });
   const page = await browser.newPage();
 
@@ -201,7 +202,7 @@ export async function openWebCarrefour() {
       }, 400);
     });
   });
-  page.removeAllListeners();
+
   const result = await page.evaluate(() => {
     const containerProducts = document.querySelectorAll(
       ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-container--contentProduct.vtex-product-summary-2-x-containerNormal.vtex-product-summary-2-x-containerNormal--contentProduct.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc"
