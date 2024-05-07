@@ -1,7 +1,10 @@
 import puppeteer from "puppeteer";
 
 export async function getProductsByScroll(url: string) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    slowMo: 100,
+  });
 
   const page = await browser.newPage();
 
@@ -13,6 +16,7 @@ export async function getProductsByScroll(url: string) {
     ".vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer"
   );
 
+  page.removeAllListeners();
   await page.evaluate(() => {
     const elementToRemove = document.querySelector(
       ".vtex-flex-layout-0-x-flexCol.vtex-flex-layout-0-x-flexCol--productCountCol.ml0.mr0.pl0.pr0.flex.flex-column.h-100.w-100"
@@ -94,7 +98,10 @@ export async function getProductsByScroll(url: string) {
 }
 
 export async function getProductsByNameCarrefour(name: string) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    slowMo: 100,
+  });
 
   const page = await browser.newPage();
 
@@ -120,7 +127,7 @@ export async function getProductsByNameCarrefour(name: string) {
       break;
     }
   }
-
+  page.removeAllListeners();
   if (inputField) {
     console.log(
       "Campo de entrada encontrado:",
@@ -136,9 +143,11 @@ export async function getProductsByNameCarrefour(name: string) {
     // Hacer clic en el elemento que tiene la clase específica
     await page.click(classSelector);
     console.log(page.url());
+    const url = page.url();
 
     //VOY A LA URL
-    getProductsByScroll(page.url());
+    await browser.close();
+    getProductsByScroll(url);
     // const url = page.url();
     // await page.goto(url);
 
@@ -155,7 +164,10 @@ export async function getProductsByNameCarrefour(name: string) {
 }
 
 export async function openWebCarrefour() {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    slowMo: 100,
+  });
   const page = await browser.newPage();
 
   await page.goto("https://www.carrefour.com.ar/almacen?page=1");
@@ -189,7 +201,7 @@ export async function openWebCarrefour() {
       }, 400);
     });
   });
-
+  page.removeAllListeners();
   const result = await page.evaluate(() => {
     const containerProducts = document.querySelectorAll(
       ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-container--contentProduct.vtex-product-summary-2-x-containerNormal.vtex-product-summary-2-x-containerNormal--contentProduct.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc"
