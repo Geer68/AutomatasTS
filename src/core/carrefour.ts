@@ -17,7 +17,6 @@ export async function getProductsByScroll(url: string) {
     ".vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer"
   );
 
-  page.removeAllListeners();
   await page.evaluate(() => {
     const elementToRemove = document.querySelector(
       ".vtex-flex-layout-0-x-flexCol.vtex-flex-layout-0-x-flexCol--productCountCol.ml0.mr0.pl0.pr0.flex.flex-column.h-100.w-100"
@@ -128,7 +127,7 @@ export async function getProductsByNameCarrefour(name: string) {
       break;
     }
   }
-  page.removeAllListeners();
+
   if (inputField) {
     console.log(
       "Campo de entrada encontrado:",
