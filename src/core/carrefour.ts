@@ -1,10 +1,7 @@
 import puppeteer from "puppeteer";
 
 export async function getProductsByScroll(url: string) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    slowMo: 100,
-  });
+  const browser = await puppeteer.launch();
 
   const page = await browser.newPage();
 
@@ -97,10 +94,7 @@ export async function getProductsByScroll(url: string) {
 }
 
 export async function getProductsByNameCarrefour(name: string) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    slowMo: 100,
-  });
+  const browser = await puppeteer.launch();
 
   const page = await browser.newPage();
 
@@ -161,10 +155,7 @@ export async function getProductsByNameCarrefour(name: string) {
 }
 
 export async function openWebCarrefour() {
-  const browser = await puppeteer.launch({
-    headless: true,
-    slowMo: 100,
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.goto("https://www.carrefour.com.ar/almacen?page=1");
@@ -256,5 +247,5 @@ export async function openWebCarrefour() {
   return result;
 }
 
-getProductsByNameCarrefour("Oblea kitkat");
+// getProductsByNameCarrefour("Oblea kitkat");
 // openWebCarrefour();
