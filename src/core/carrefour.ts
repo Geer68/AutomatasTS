@@ -1,17 +1,19 @@
 import puppeteer from "puppeteer";
 import { Browser, SelectorProductos } from "./logic.js";
 
-export async function getProductosPorNombre(name: string) {
+export async function getProductosPorNombreCarrefour(name: string) {
   const browser = new Browser("https://www.carrefour.com.ar");
 
   await browser.crearInstanciaNavegador();
 
   const url = await browser.getInputField(
     'input[id^="downshift-"][id$="-input"]',
+    ".c-muted-2.fw5.flex.items-center.t-body.bg-base.vtex-input__suffix.br2.bl-0.br--right.pr5.pl4",
     name
   );
 
   await browser.goToPage(url);
+
   const properties: SelectorProductos = {
     container:
       ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-container--contentProduct.vtex-product-summary-2-x-containerNormal.vtex-product-summary-2-x-containerNormal--contentProduct.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc",
@@ -35,8 +37,10 @@ export async function getProductosPorNombre(name: string) {
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
   console.log("Cantidad elementos: " + productos.length);
+  browser.close();
   return productos;
 }
+
 export async function getAlmacenCarrefour() {
   const browser = new Browser("https://www.carrefour.com.ar/Almacen");
 

@@ -23,10 +23,6 @@ export class Browser {
 
   constructor(url: string) {
     this.url = url;
-    // console.log("URL: ", this.url);
-    // (async () => {
-    //   await this.crearInstanciaNavegador();
-    // })();
   }
 
   public async crearInstanciaNavegador() {
@@ -41,8 +37,8 @@ export class Browser {
 
   public async scrolearFin() {
     await this.page.evaluate(async () => {
-      const scrollStep = 100; // Cantidad de píxeles para desplazar en cada paso
-      const scrollDelay = 100; // Retraso entre cada paso (en milisegundos)
+      const scrollStep = 300; // 100   Cantidad de píxeles para desplazar en cada paso
+      const scrollDelay = 50; // Retraso entre cada paso (en milisegundos)
 
       const scrollHeight = document.body.scrollHeight;
       let currentPosition = 0;
@@ -52,19 +48,6 @@ export class Browser {
         currentPosition += scrollStep;
         await new Promise((resolve) => setTimeout(resolve, scrollDelay));
       }
-      // await new Promise((resolve) => {
-      //     let totalHeight = 0;
-      //     const distance = 100;
-      //     const timer = setInterval(() => {
-      //         const scrollHeight = document.body.scrollHeight;
-      //         window.scrollBy(0, distance);
-      //         totalHeight += distance;
-      //         if (totalHeight >= scrollHeight) {
-      //             clearInterval(timer);
-      //             resolve(); // Resolve the promise when scrolling is finished
-      //         }
-      //     }, 50);
-      // });
     });
   }
 
@@ -101,35 +84,44 @@ export class Browser {
       const results = await this.page.evaluate(
         (container, producto) => {
           const elements = document.querySelectorAll(container);
+          console.log(elements);
+          console.log(
+            "Cantidad de contenedores encontrados: ",
+            elements.length
+          );
           const results = [];
 
           elements.forEach((element) => {
-            let url = element.querySelector(producto.url)?.getAttribute("href");
+            const url = element
+              .querySelector(producto.url)
+              ?.getAttribute("href");
             const nombre = element.querySelector(producto.nombre)?.textContent;
             const imagen = element
               .querySelector(producto.imagen)
               ?.getAttribute("src");
-            const precioSpans = element.querySelectorAll(
-              ".valtech-carrefourar-product-price-0-x-currencyContainer span"
-            );
-            let precio = Array.from(precioSpans)
+            const precioSpans = element.querySelectorAll(producto.precio);
+            const precio = Array.from(precioSpans)
               .map((span) => span.textContent.trim())
               .join("");
 
             results.push({ url, nombre, imagen, precio });
           });
-
+          console.log("Cantidad de resultados: ", results.length);
           return results;
         },
         container,
         producto
       );
+
       results.forEach((result) => {
-        result.url = this.url + result.url;
+        if (result.url) {
+          result.url = this.url + result.url;
+        }
       });
       return results;
     } catch (error) {
       console.log("Error al obtener los resultados: ", error);
+      return [];
     }
   }
 
@@ -152,7 +144,11 @@ export class Browser {
     return this.page.url();
   }
 
-  public async getInputField(inputSelector: string, text: string) {
+  public async getInputField(
+    inputSelector: string,
+    searchButton: string,
+    text: string
+  ) {
     const allInputs = await this.page.$$(inputSelector);
 
     let inputField;
@@ -176,9 +172,38 @@ export class Browser {
         await inputField.evaluate((el) => el.id)
       );
       await inputField.type(text);
-      return this.clickOnButton(
-        ".c-muted-2.fw5.flex.items-center.t-body.bg-base.vtex-input__suffix.br2.bl-0.br--right.pr5.pl4"
-      );
+      return this.clickOnButton(searchButton);
+    }
+  }
+
+  public async getInputFieldAtomo(
+    inputSelector: string,
+    searchButton: string,
+    text: string
+  ) {
+    try {
+      // Esperar a que el input de búsqueda esté presente y sea interactuable
+      await this.page.waitForSelector(inputSelector, {
+        visible: true,
+        timeout: 10000,
+      });
+
+      // Obtener el elemento del input de búsqueda
+      const inputField = await this.page.$(inputSelector);
+      if (!inputField) {
+        throw new Error(
+          `No se pudo encontrar el input con el selector: ${inputSelector}`
+        );
+      }
+
+      // Escribir el texto en el input
+      await inputField.type(text);
+
+      // Hacer clic en el botón de búsqueda
+      return await this.clickOnButton(searchButton);
+    } catch (error) {
+      console.error("Error al interactuar con el campo de búsqueda:", error);
+      throw error;
     }
   }
 }
