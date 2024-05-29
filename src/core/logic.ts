@@ -27,7 +27,7 @@ export class Browser {
 
   public async crearInstanciaNavegador() {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       slowMo: 100,
     });
     this.page = await browser.newPage();
