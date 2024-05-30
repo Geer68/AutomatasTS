@@ -10,6 +10,7 @@ import {
 } from "../core/changoMas.js";
 import { getAlmacenVea, getProductosPorNombreVea } from "../core/vea.js";
 import { getAlmacenAtomo, getProductosPorNombreAtomo } from "../core/atomo.js";
+import { getAlmacenCoto, getProductosPorNombreCoto } from "../core/coto.js";
 
 const router = Router();
 
@@ -21,7 +22,7 @@ router.get("/carrefour", async (req, res) => {
 router.get("/carrefour/searchByName", async (req, res) => {
   const name = req.query.name;
   console.log(name);
-  const results = await getProductosPorNombreCarrefour("kitkat");
+  const results = await getProductosPorNombreCarrefour(name);
   res.send(results);
 });
 
@@ -33,7 +34,7 @@ router.get("/changoMas", async (req, res) => {
 router.get("/changoMas/searchByName", async (req, res) => {
   const name = req.query.name;
   console.log(name);
-  const results = await getProductosPorNombreChangoMas("kitkat");
+  const results = await getProductosPorNombreChangoMas(name);
   res.send(results);
 });
 
@@ -49,7 +50,7 @@ router.get("/vea/searchByName", async (req, res) => {
   const name = req.query.name;
   console.log(name);
   //No trae el precio
-  const results = await getProductosPorNombreVea("kitkat");
+  const results = await getProductosPorNombreVea(name);
   res.send(results);
 });
 
@@ -63,7 +64,19 @@ router.get("/atomo/searchByName", async (req, res) => {
   const name = req.query.name;
   console.log(name);
   //Me devuelve solo img y precio
-  const results = await getProductosPorNombreAtomo("kitkat");
+  const results = await getProductosPorNombreAtomo(name);
+  res.send(results);
+});
+
+router.get("/coto", async (req, res) => {
+  const results = await getAlmacenCoto();
+  res.send(results);
+});
+
+router.get("/coto/searchByName", async (req, res) => {
+  const name = req.query.name;
+  console.log(name);
+  const results = await getProductosPorNombreCoto(name);
   res.send(results);
 });
 

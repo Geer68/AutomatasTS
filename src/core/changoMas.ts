@@ -31,7 +31,7 @@ export async function getAlmacenChangoMas() {
 
 export async function getProductosPorNombreChangoMas(name: string) {
   const browser = new Browser("https://www.masonline.com.ar/");
-
+  console.log("Buscando: ", name);
   await browser.crearInstanciaNavegador();
 
   const url = await browser.getInputField(

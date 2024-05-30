@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import * as url from "url";
 
 export type SelectorProductos = {
   container: string;
@@ -26,8 +27,14 @@ export class Browser {
   }
 
   public async crearInstanciaNavegador() {
+    const isValidUrl = url.parse(this.url).protocol !== null;
+
+    if (!isValidUrl) {
+      throw new Error(`Invalid URL: ${this.url}`);
+    }
+
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       slowMo: 100,
     });
     this.page = await browser.newPage();
@@ -37,17 +44,26 @@ export class Browser {
 
   public async scrolearFin() {
     await this.page.evaluate(async () => {
-      const scrollStep = 300; // 100   Cantidad de píxeles para desplazar en cada paso
-      const scrollDelay = 50; // Retraso entre cada paso (en milisegundos)
+      await new Promise<void>((resolve) => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollStep = Math.ceil(scrollHeight / 10);
+        let currentPosition = 0;
 
-      const scrollHeight = document.body.scrollHeight;
-      let currentPosition = 0;
+        const smoothScroll = () => {
+          window.scrollBy(0, scrollStep);
+          currentPosition += scrollStep;
 
-      while (currentPosition < scrollHeight) {
-        window.scrollTo(0, currentPosition);
-        currentPosition += scrollStep;
-        await new Promise((resolve) => setTimeout(resolve, scrollDelay));
-      }
+          if (currentPosition >= scrollHeight) {
+            resolve();
+          } else {
+            setTimeout(() => {
+              requestAnimationFrame(smoothScroll);
+            }, 500); // Ajusta el retardo a 500 ms
+          }
+        };
+
+        requestAnimationFrame(smoothScroll);
+      });
     });
   }
 
@@ -58,6 +74,10 @@ export class Browser {
         element.remove();
       }
     }, selector);
+  }
+
+  public async pressEnter() {
+    await this.page.keyboard.press("Enter");
   }
 
   async waitForSelector(selector: string) {
@@ -84,11 +104,6 @@ export class Browser {
       const results = await this.page.evaluate(
         (container, producto) => {
           const elements = document.querySelectorAll(container);
-          console.log(elements);
-          console.log(
-            "Cantidad de contenedores encontrados: ",
-            elements.length
-          );
           const results = [];
 
           elements.forEach((element) => {
@@ -105,8 +120,8 @@ export class Browser {
               .join("");
 
             results.push({ url, nombre, imagen, precio });
+            console.log("Producto: ", { url, nombre, imagen, precio });
           });
-          console.log("Cantidad de resultados: ", results.length);
           return results;
         },
         container,
@@ -174,6 +189,10 @@ export class Browser {
       await inputField.type(text);
       return this.clickOnButton(searchButton);
     }
+    if (searchButton == "") {
+      console.log("Campo de hacer click no referenciado");
+      this.pressEnter();
+    }
   }
 
   public async getInputFieldAtomo(
@@ -195,7 +214,6 @@ export class Browser {
           `No se pudo encontrar el input con el selector: ${inputSelector}`
         );
       }
-
       // Escribir el texto en el input
       await inputField.type(text);
 

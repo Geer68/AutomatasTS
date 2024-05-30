@@ -26,12 +26,12 @@ export async function getProductosPorNombreCarrefour(name: string) {
       precio: ".valtech-carrefourar-product-price-0-x-currencyContainer span",
     },
   };
-  await browser.removeHTMLElement(
-    ".vtex-flex-layout-0-x-flexCol.vtex-flex-layout-0-x-flexCol--productCountCol.ml0.mr0.pl0.pr0.flex.flex-column.h-100.w-100"
-  );
-
   await browser.waitForSelector(
     ".vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer"
+  );
+  await browser.removeHTMLElement(".ot-floating-button.ot-hide");
+  await browser.removeHTMLElement(
+    ".vtex-flex-layout-0-x-flexCol.vtex-flex-layout-0-x-flexCol--productCountCol.ml0.mr0.pl0.pr0.flex.flex-column.h-100.w-100"
   );
 
   await browser.scrolearFin();
