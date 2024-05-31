@@ -1,11 +1,15 @@
-import puppeteer from "puppeteer";
 import { Browser, SelectorProductos } from "./logic.js";
 
 export async function getProductosPorNombreCarrefour(name: string) {
-  const browser = new Browser("https://www.carrefour.com.ar");
-  browser.setUrl("https://www.carrefour.com.ar");
+  const browser = new Browser("https://www.carrefour.com.ar/Almacen");
+  browser.setUrl("https://www.carrefour.com.ar/Almacen");
+  console.log("CARREFOUR: ", name);
 
   await browser.crearInstanciaNavegador();
+
+  await browser.waitForSelector(
+    ".vtex-product-summary-2-x-clearLink.vtex-product-summary-2-x-clearLink--contentProduct.h-100.flex.flex-column"
+  );
 
   const url = await browser.getInputField(
     'input[id^="downshift-"][id$="-input"]',
@@ -27,9 +31,11 @@ export async function getProductosPorNombreCarrefour(name: string) {
       precio: ".valtech-carrefourar-product-price-0-x-currencyContainer span",
     },
   };
+
   await browser.waitForSelector(
-    ".vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer"
+    ".vtex-product-summary-2-x-clearLink.vtex-product-summary-2-x-clearLink--contentProduct.h-100.flex.flex-column"
   );
+
   await browser.removeHTMLElement(".ot-floating-button.ot-hide");
   await browser.removeHTMLElement(
     ".vtex-flex-layout-0-x-flexCol.vtex-flex-layout-0-x-flexCol--productCountCol.ml0.mr0.pl0.pr0.flex.flex-column.h-100.w-100"
@@ -37,6 +43,7 @@ export async function getProductosPorNombreCarrefour(name: string) {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
+  console.log("CANT PROD: ", productos.length);
   browser.close();
   return productos;
 }
@@ -44,11 +51,11 @@ export async function getProductosPorNombreCarrefour(name: string) {
 export async function getAlmacenCarrefour() {
   const browser = new Browser("https://www.carrefour.com.ar/Almacen");
   browser.setUrl("https://www.carrefour.com.ar/Almacen");
-  console.log("CARREFOUR: ", name);
+
   await browser.crearInstanciaNavegador();
 
   await browser.waitForSelector(
-    ".vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer"
+    ".vtex-product-summary-2-x-clearLink.vtex-product-summary-2-x-clearLink--contentProduct.h-100.flex.flex-column"
   );
 
   const properties: SelectorProductos = {
@@ -63,14 +70,14 @@ export async function getAlmacenCarrefour() {
       precio: ".valtech-carrefourar-product-price-0-x-currencyContainer span",
     },
   };
+  await browser.removeHTMLElement(".ot-floating-button.ot-hide");
   await browser.removeHTMLElement(
     ".vtex-flex-layout-0-x-flexCol.vtex-flex-layout-0-x-flexCol--productCountCol.ml0.mr0.pl0.pr0.flex.flex-column.h-100.w-100"
   );
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-
+  console.log("CANT PROD: ", productos.length);
   browser.close();
-
   return productos;
 }

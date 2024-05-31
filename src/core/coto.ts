@@ -24,9 +24,8 @@ export async function getAlmacenCoto() {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-
+  console.log("CANT PROD: ", productos.length);
   browser.close();
-
   return productos;
 }
 
@@ -59,7 +58,7 @@ export async function getProductosPorNombreCoto(name: string) {
   await browser.waitForSelector(".clearfix");
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-
+  console.log("CANT PROD: ", productos.length);
   browser.close();
   return productos;
 }

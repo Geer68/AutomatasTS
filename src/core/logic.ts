@@ -72,7 +72,7 @@ export class Browser {
           } else {
             setTimeout(() => {
               requestAnimationFrame(smoothScroll);
-            }, 500); // Ajusta el retardo a 500 ms
+            }, 250); // Ajusta el retardo a 500 ms
           }
         };
 

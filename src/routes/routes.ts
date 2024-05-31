@@ -21,7 +21,11 @@ router.get("/carrefour", async (req, res) => {
 });
 router.get("/carrefour/searchByName", async (req, res) => {
   const name = req.query.name;
+  const startTime = Date.now();
   const results = await getProductosPorNombreCarrefour(name);
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
 });
 
@@ -32,12 +36,15 @@ router.get("/changoMas", async (req, res) => {
 
 router.get("/changoMas/searchByName", async (req, res) => {
   const name = req.query.name;
+  const startTime = Date.now();
   const results = await getProductosPorNombreChangoMas(name);
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
 });
 
 router.get("/vea", async (req, res) => {
-  const name = req.query.name;
   //Eliminar el /almacen/ de la url
   //No trae el precio
   const results = await getAlmacenVea();
@@ -45,8 +52,12 @@ router.get("/vea", async (req, res) => {
 });
 router.get("/vea/searchByName", async (req, res) => {
   const name = req.query.name;
+  const startTime = Date.now();
   //No trae el precio
   const results = await getProductosPorNombreVea(name);
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
 });
 
@@ -58,8 +69,12 @@ router.get("/atomo", async (req, res) => {
 
 router.get("/atomo/searchByName", async (req, res) => {
   const name = req.query.name;
+  const startTime = Date.now();
   //Me devuelve solo img y precio
   const results = await getProductosPorNombreAtomo(name);
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
 });
 
@@ -70,7 +85,11 @@ router.get("/coto", async (req, res) => {
 
 router.get("/coto/searchByName", async (req, res) => {
   const name = req.query.name;
+  const startTime = Date.now();
   const results = await getProductosPorNombreCoto(name);
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
 });
 

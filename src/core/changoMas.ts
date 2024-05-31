@@ -1,4 +1,3 @@
-import puppeteer from "puppeteer";
 import { Browser, SelectorProductos } from "./logic.js";
 
 export async function getAlmacenChangoMas() {
@@ -28,12 +27,15 @@ export async function getAlmacenChangoMas() {
 }
 
 export async function getProductosPorNombreChangoMas(name: string) {
-  const browser = new Browser("https://www.masonline.com.ar/");
-  browser.setUrl("https://www.masonline.com.ar/");
+  const browser = new Browser("https://www.masonline.com.ar");
+  browser.setUrl("https://www.masonline.com.ar");
   console.log("CHANGO MAS: ", name);
+
   await browser.crearInstanciaNavegador();
 
-  await browser.waitForSelector("#downshift-1-input");
+  await browser.waitForSelector(
+    ".vtex-slider-layout-0-x-imageElement--main-banner-slider"
+  );
 
   const url = await browser.getInputField(
     "#downshift-1-input",
@@ -57,7 +59,7 @@ export async function getProductosPorNombreChangoMas(name: string) {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-
+  console.log("CANT PROD: ", productos.length);
   browser.close();
   return productos;
 }

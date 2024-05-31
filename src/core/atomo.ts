@@ -42,7 +42,7 @@ export async function getProductosPorNombreAtomo(name: string) {
     name
   );
 
-  await browser.goToPage(url);
+  // await browser.goToPage(url);
 
   const properties: SelectorProductos = {
     container: ".product-miniature.js-product-miniature.mb-3",

@@ -1,4 +1,3 @@
-import puppeteer from "puppeteer";
 import { Browser, SelectorProductos } from "./logic.js";
 
 export async function getAlmacenVea() {
@@ -30,19 +29,21 @@ export async function getAlmacenVea() {
 }
 
 export async function getProductosPorNombreVea(name: string) {
-  const browser = new Browser("https://www.vea.com.ar");
-  browser.setUrl("https://www.vea.com.ar");
+  const browser = new Browser("https://www.vea.com.ar/almacen");
+  browser.setUrl("https://www.vea.com.ar/almacen");
   console.log("VEA: ", name);
 
   await browser.crearInstanciaNavegador();
 
-  await browser.waitForSelector("#downshift-1-input");
+  await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
 
   const url = await browser.getInputField(
     "#downshift-1-input",
     ".vtex-store-components-3-x-searchBarIcon--headerMobile--search",
     name
   );
+
+  await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
 
   await browser.goToPage(url);
 
@@ -61,7 +62,7 @@ export async function getProductosPorNombreVea(name: string) {
   await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-
+  console.log("CANT PROD: ", productos.length);
   browser.close();
   return productos;
 }
