@@ -17,7 +17,7 @@ export type Producto = {
   imagen: string;
   precio: string;
 };
-
+const MAX_RETRIES = 10;
 export class Browser {
   public page: puppeteer.Page;
   public url: string;
@@ -26,8 +26,13 @@ export class Browser {
     this.url = url;
   }
 
+  public setUrl(url: string) {
+    this.url = url;
+  }
+
   public async crearInstanciaNavegador() {
     const isValidUrl = url.parse(this.url).protocol !== null;
+    console.log("URL: ", this.url);
 
     if (!isValidUrl) {
       throw new Error(`Invalid URL: ${this.url}`);
@@ -35,11 +40,20 @@ export class Browser {
 
     const browser = await puppeteer.launch({
       headless: false,
-      slowMo: 100,
+      slowMo: 50,
     });
     this.page = await browser.newPage();
-    await this.page.goto(this.url);
-    console.log("Browser instanciado");
+    for (let i = 0; i < MAX_RETRIES; i++) {
+      try {
+        await this.page.goto(this.url);
+        break;
+      } catch (error) {
+        console.error(
+          `Navigation failed, retrying (${i + 1}/${MAX_RETRIES})`,
+          error
+        );
+      }
+    }
   }
 
   public async scrolearFin() {
@@ -81,12 +95,11 @@ export class Browser {
   }
 
   async waitForSelector(selector: string) {
-    // console.log("Esperando selector: ", selector);
     try {
       await this.page.waitForSelector(selector);
     } catch (error) {
-      console.log("Error al esperar el selector: ", selector);
-      console.log(error);
+      console.error("Error al esperar el selector: ", selector);
+      console.error(error);
     }
   }
 
@@ -120,7 +133,6 @@ export class Browser {
               .join("");
 
             results.push({ url, nombre, imagen, precio });
-            console.log("Producto: ", { url, nombre, imagen, precio });
           });
           return results;
         },
@@ -135,7 +147,7 @@ export class Browser {
       });
       return results;
     } catch (error) {
-      console.log("Error al obtener los resultados: ", error);
+      console.error("Error al obtener los resultados: ", error);
       return [];
     }
   }
@@ -148,6 +160,7 @@ export class Browser {
   }
 
   public async goToPage(url: string) {
+    console.log("Going to page: ", url);
     await this.page.goto(url);
   }
 
@@ -155,7 +168,6 @@ export class Browser {
   public async clickOnButton(selector: string): Promise<string> {
     await this.page.waitForSelector(selector);
     await this.page.click(selector);
-    console.log(this.page.url());
     return this.page.url();
   }
 
@@ -182,7 +194,7 @@ export class Browser {
     }
 
     if (inputField) {
-      console.log(
+      console.error(
         "Campo de entrada encontrado:",
         await inputField.evaluate((el) => el.id)
       );
@@ -190,7 +202,7 @@ export class Browser {
       return this.clickOnButton(searchButton);
     }
     if (searchButton == "") {
-      console.log("Campo de hacer click no referenciado");
+      console.error("Campo de hacer click no referenciado");
       this.pressEnter();
     }
   }

@@ -4,7 +4,7 @@ export async function getAlmacenAtomo() {
   const browser = new Browser(
     "https://atomoconviene.com/atomo-ecommerce/3-almacen"
   );
-
+  browser.setUrl("https://atomoconviene.com/atomo-ecommerce/3-almacen");
   await browser.crearInstanciaNavegador();
 
   await browser.waitForSelector(".products");
@@ -21,8 +21,6 @@ export async function getAlmacenAtomo() {
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
 
-  console.log("Cantidad elementos: " + productos.length);
-
   browser.close();
 
   return productos;
@@ -32,7 +30,8 @@ export async function getProductosPorNombreAtomo(name: string) {
   const browser = new Browser(
     "https://atomoconviene.com/atomo-ecommerce/3-almacen"
   );
-
+  browser.setUrl("https://atomoconviene.com/atomo-ecommerce/3-almacen");
+  console.log("ATOMO: ", name);
   await browser.crearInstanciaNavegador();
 
   await browser.waitForSelector(`input.ui-autocomplete-input[name="s"]`);
@@ -59,7 +58,7 @@ export async function getProductosPorNombreAtomo(name: string) {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-  console.log("Cantidad elementos: " + productos.length);
+
   browser.close();
   return productos;
 }

@@ -3,6 +3,7 @@ import { Browser, SelectorProductos } from "./logic.js";
 
 export async function getAlmacenVea() {
   const browser = new Browser("https://www.vea.com.ar/almacen");
+  browser.setUrl("https://www.vea.com.ar/almacen");
 
   await browser.crearInstanciaNavegador();
 
@@ -23,8 +24,6 @@ export async function getAlmacenVea() {
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
 
-  console.log("Cantidad elementos: " + productos.length);
-
   browser.close();
 
   return productos;
@@ -32,6 +31,8 @@ export async function getAlmacenVea() {
 
 export async function getProductosPorNombreVea(name: string) {
   const browser = new Browser("https://www.vea.com.ar");
+  browser.setUrl("https://www.vea.com.ar");
+  console.log("VEA: ", name);
 
   await browser.crearInstanciaNavegador();
 
@@ -39,6 +40,10 @@ export async function getProductosPorNombreVea(name: string) {
     "#downshift-1-input",
     ".vtex-store-components-3-x-searchBarIcon--headerMobile--search",
     name
+  );
+
+  await browser.waitForSelector(
+    ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-containerNormal.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc"
   );
 
   await browser.goToPage(url);
@@ -58,7 +63,7 @@ export async function getProductosPorNombreVea(name: string) {
   await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-  console.log("Cantidad elementos: " + productos.length);
+
   browser.close();
   return productos;
 }

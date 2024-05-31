@@ -3,6 +3,7 @@ import { Browser, SelectorProductos } from "./logic.js";
 
 export async function getProductosPorNombreCarrefour(name: string) {
   const browser = new Browser("https://www.carrefour.com.ar");
+  browser.setUrl("https://www.carrefour.com.ar");
 
   await browser.crearInstanciaNavegador();
 
@@ -36,14 +37,14 @@ export async function getProductosPorNombreCarrefour(name: string) {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-  console.log("Cantidad elementos: " + productos.length);
   browser.close();
   return productos;
 }
 
 export async function getAlmacenCarrefour() {
   const browser = new Browser("https://www.carrefour.com.ar/Almacen");
-
+  browser.setUrl("https://www.carrefour.com.ar/Almacen");
+  console.log("CARREFOUR: ", name);
   await browser.crearInstanciaNavegador();
 
   await browser.waitForSelector(
@@ -68,8 +69,6 @@ export async function getAlmacenCarrefour() {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-
-  console.log("Cantidad elementos: " + productos.length);
 
   browser.close();
 

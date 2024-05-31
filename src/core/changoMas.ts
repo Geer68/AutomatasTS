@@ -5,7 +5,7 @@ export async function getAlmacenChangoMas() {
   const browser = new Browser(
     "https://www.masonline.com.ar/3454?map=productClusterIds"
   );
-
+  browser.setUrl("https://www.masonline.com.ar/3454?map=productClusterIds");
   await browser.crearInstanciaNavegador();
 
   await browser.waitForSelector(".vtex-search-result-3-x-gallery");
@@ -22,8 +22,6 @@ export async function getAlmacenChangoMas() {
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
 
-  console.log("Cantidad elementos: " + productos.length);
-
   browser.close();
 
   return productos;
@@ -31,7 +29,8 @@ export async function getAlmacenChangoMas() {
 
 export async function getProductosPorNombreChangoMas(name: string) {
   const browser = new Browser("https://www.masonline.com.ar/");
-  console.log("Buscando: ", name);
+  browser.setUrl("https://www.masonline.com.ar/");
+  console.log("CHANGO MAS: ", name);
   await browser.crearInstanciaNavegador();
 
   const url = await browser.getInputField(
@@ -40,6 +39,7 @@ export async function getProductosPorNombreChangoMas(name: string) {
     name
   );
 
+  await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
   await browser.goToPage(url);
 
   const properties: SelectorProductos = {
@@ -56,7 +56,7 @@ export async function getProductosPorNombreChangoMas(name: string) {
 
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
-  console.log("Cantidad elementos: " + productos.length);
+
   browser.close();
   return productos;
 }
