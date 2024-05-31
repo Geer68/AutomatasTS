@@ -40,7 +40,7 @@ export class Browser {
 
     const browser = await puppeteer.launch({
       headless: false,
-      slowMo: 50,
+      slowMo: 25,
     });
     this.page = await browser.newPage();
     for (let i = 0; i < MAX_RETRIES; i++) {

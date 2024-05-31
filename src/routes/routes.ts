@@ -17,23 +17,23 @@ const router = Router();
 //Carrefour
 router.get("/carrefour", async (req, res) => {
   const results = await getAlmacenCarrefour();
-  res.send(results);
+  res.send({ products: results });
 });
 router.get("/carrefour/searchByName", async (req, res) => {
   const name = req.query.name;
   const results = await getProductosPorNombreCarrefour(name);
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/changoMas", async (req, res) => {
   const results = await getAlmacenChangoMas();
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/changoMas/searchByName", async (req, res) => {
   const name = req.query.name;
   const results = await getProductosPorNombreChangoMas(name);
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/vea", async (req, res) => {
@@ -41,37 +41,37 @@ router.get("/vea", async (req, res) => {
   //Eliminar el /almacen/ de la url
   //No trae el precio
   const results = await getAlmacenVea();
-  res.send(results);
+  res.send({ products: results });
 });
 router.get("/vea/searchByName", async (req, res) => {
   const name = req.query.name;
   //No trae el precio
   const results = await getProductosPorNombreVea(name);
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/atomo", async (req, res) => {
   //Algunas imagenes vuelven en null
   const results = await getAlmacenAtomo();
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/atomo/searchByName", async (req, res) => {
   const name = req.query.name;
   //Me devuelve solo img y precio
   const results = await getProductosPorNombreAtomo(name);
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/coto", async (req, res) => {
   const results = await getAlmacenCoto();
-  res.send(results);
+  res.send({ products: results });
 });
 
 router.get("/coto/searchByName", async (req, res) => {
   const name = req.query.name;
   const results = await getProductosPorNombreCoto(name);
-  res.send(results);
+  res.send({ products: results });
 });
 
 export default router;
