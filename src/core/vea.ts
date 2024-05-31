@@ -36,14 +36,12 @@ export async function getProductosPorNombreVea(name: string) {
 
   await browser.crearInstanciaNavegador();
 
+  await browser.waitForSelector("#downshift-1-input");
+
   const url = await browser.getInputField(
     "#downshift-1-input",
     ".vtex-store-components-3-x-searchBarIcon--headerMobile--search",
     name
-  );
-
-  await browser.waitForSelector(
-    ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-containerNormal.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc"
   );
 
   await browser.goToPage(url);

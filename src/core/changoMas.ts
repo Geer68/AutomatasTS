@@ -33,13 +33,14 @@ export async function getProductosPorNombreChangoMas(name: string) {
   console.log("CHANGO MAS: ", name);
   await browser.crearInstanciaNavegador();
 
+  await browser.waitForSelector("#downshift-1-input");
+
   const url = await browser.getInputField(
     "#downshift-1-input",
     ".vtex-store-components-3-x-searchBarIcon",
     name
   );
 
-  await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
   await browser.goToPage(url);
 
   const properties: SelectorProductos = {
