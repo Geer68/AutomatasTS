@@ -9,15 +9,14 @@ export async function getAlmacenVea() {
   await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
 
   const properties: SelectorProductos = {
-    container:
-      ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-containerNormal.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc",
+    container: ".vtex-search-result-3-x-galleryItem",
     producto: {
       url: ".vtex-product-summary-2-x-clearLink.h-100.flex.flex-column",
       nombre:
         ".vtex-product-summary-2-x-productBrand.vtex-product-summary-2-x-brandName.t-body",
       imagen:
         ".vtex-product-summary-2-x-imageNormal.vtex-product-summary-2-x-image",
-      precio: ".valtech-carrefourar-product-price-0-x-currencyContainer span",
+      precio: ".veaargentina-store-theme-1dCOMij_MzTzZOCohX1K7w", //
     },
   };
   await browser.scrolearFin();
@@ -45,18 +44,17 @@ export async function getProductosPorNombreVea(name: string) {
 
   await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");
 
-  await browser.goToPage(url);
+  // await browser.goToPage(url);
 
   const properties: SelectorProductos = {
-    container:
-      ".vtex-product-summary-2-x-container.vtex-product-summary-2-x-containerNormal.overflow-hidden.br3.h-100.w-100.flex.flex-column.justify-between.center.tc",
+    container: ".vtex-search-result-3-x-galleryItem",
     producto: {
       url: ".vtex-product-summary-2-x-clearLink.h-100.flex.flex-column",
       nombre:
         ".vtex-product-summary-2-x-productBrand.vtex-product-summary-2-x-brandName.t-body",
       imagen:
         ".vtex-product-summary-2-x-imageNormal.vtex-product-summary-2-x-image",
-      precio: ".valtech-carrefourar-product-price-0-x-currencyContainer span",
+      precio: ".veaargentina-store-theme-1dCOMij_MzTzZOCohX1K7w", //
     },
   };
   await browser.waitForSelector(".vtex-search-result-3-x-galleryItem");

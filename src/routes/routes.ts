@@ -46,14 +46,12 @@ router.get("/changoMas/searchByName", async (req, res) => {
 
 router.get("/vea", async (req, res) => {
   //Eliminar el /almacen/ de la url
-  //No trae el precio
   const results = await getAlmacenVea();
   res.send({ products: results });
 });
 router.get("/vea/searchByName", async (req, res) => {
   const name = req.query.name;
   const startTime = Date.now();
-  //No trae el precio
   const results = await getProductosPorNombreVea(name);
   const endTime = Date.now();
   const elapsedTimeInSeconds = (endTime - startTime) / 1000;
@@ -70,7 +68,6 @@ router.get("/atomo", async (req, res) => {
 router.get("/atomo/searchByName", async (req, res) => {
   const name = req.query.name;
   const startTime = Date.now();
-  //Me devuelve solo img y precio
   const results = await getProductosPorNombreAtomo(name);
   const endTime = Date.now();
   const elapsedTimeInSeconds = (endTime - startTime) / 1000;
@@ -91,6 +88,28 @@ router.get("/coto/searchByName", async (req, res) => {
   const elapsedTimeInSeconds = (endTime - startTime) / 1000;
   console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
+});
+
+router.get("/getProductFromAllStores", async (req, res) => {
+  const name = req.query.name;
+  const startTime = Date.now();
+  try {
+    const [array1, array2, array3, array4, array5] = await Promise.all([
+      getProductosPorNombreCoto(name),
+      getProductosPorNombreAtomo(name),
+      getProductosPorNombreVea(name),
+      getProductosPorNombreChangoMas(name),
+      getProductosPorNombreCarrefour(name),
+    ]);
+    const results = [...array1, ...array2, ...array3, ...array4, ...array5];
+    const endTime = Date.now();
+    const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+    console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
+    res.send({ products: results });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "Error al obtener los productos" });
+  }
 });
 
 export default router;

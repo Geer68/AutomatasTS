@@ -14,12 +14,13 @@ export async function getAlmacenAtomo() {
     producto: {
       url: "h2.product-title a",
       nombre: "h2.product-title",
-      imagen: "img[data-src]",
+      imagen: "img",
       precio: ".product-price-and-shipping .price",
     },
   };
+
   await browser.scrolearFin();
-  const productos = await browser.getResultados({ selector: properties });
+  const productos = await browser.getResultadosAtomo({ selector: properties });
 
   browser.close();
 
@@ -47,9 +48,9 @@ export async function getProductosPorNombreAtomo(name: string) {
   const properties: SelectorProductos = {
     container: ".product-miniature.js-product-miniature.mb-3",
     producto: {
-      url: "h2.product-title a",
-      nombre: "h2.product-title a",
-      imagen: "img[data-src]",
+      url: "a",
+      nombre: ".product-title",
+      imagen: "img",
       precio: ".product-price-and-shipping .price",
     },
   };
@@ -57,7 +58,7 @@ export async function getProductosPorNombreAtomo(name: string) {
   await browser.waitForSelector(".products");
 
   await browser.scrolearFin();
-  const productos = await browser.getResultados({ selector: properties });
+  const productos = await browser.getResultadosAtomo({ selector: properties });
 
   browser.close();
   return productos;

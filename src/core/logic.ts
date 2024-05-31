@@ -11,6 +11,12 @@ export type SelectorProductos = {
   };
 };
 
+function delay(time) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, time);
+  });
+}
+
 export type Producto = {
   url: string;
   nombre: string;
@@ -44,6 +50,7 @@ export class Browser {
     });
     this.page = await browser.newPage();
     for (let i = 0; i < MAX_RETRIES; i++) {
+      console.log(`Navigating to ${this.url}...`);
       try {
         await this.page.goto(this.url);
         break;
@@ -168,6 +175,7 @@ export class Browser {
   public async clickOnButton(selector: string): Promise<string> {
     await this.page.waitForSelector(selector);
     await this.page.click(selector);
+    await delay(5000); // Wait for 5 seconds
     return this.page.url();
   }
 
@@ -206,7 +214,50 @@ export class Browser {
       this.pressEnter();
     }
   }
+  async getResultadosAtomo({
+    selector,
+  }: {
+    selector: SelectorProductos;
+  }): Promise<Producto[]> {
+    try {
+      const { container, producto } = selector;
+      const results = await this.page.evaluate(
+        (container, producto) => {
+          const elements = document.querySelectorAll(container);
+          const results = [];
 
+          elements.forEach((element) => {
+            const url = element
+              .querySelector(producto.url)
+              ?.getAttribute("href");
+            const nombre = element.querySelector(producto.nombre)?.textContent;
+            const imagen = element
+              .querySelector(producto.imagen)
+              ?.getAttribute("data-src");
+            const precioSpans = element.querySelectorAll(producto.precio);
+            const precio = Array.from(precioSpans)
+              .map((span) => span.textContent.trim())
+              .join("");
+
+            results.push({ url, nombre, imagen, precio });
+          });
+          return results;
+        },
+        container,
+        producto
+      );
+
+      results.forEach((result) => {
+        if (result.url) {
+          result.url = this.url + result.url;
+        }
+      });
+      return results;
+    } catch (error) {
+      console.error("Error al obtener los resultados: ", error);
+      return [];
+    }
+  }
   public async getInputFieldAtomo(
     inputSelector: string,
     searchButton: string,

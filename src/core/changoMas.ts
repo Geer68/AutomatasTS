@@ -43,7 +43,7 @@ export async function getProductosPorNombreChangoMas(name: string) {
     name
   );
 
-  await browser.goToPage(url);
+  // await browser.goToPage(url);
 
   const properties: SelectorProductos = {
     container: ".vtex-search-result-3-x-galleryItem",

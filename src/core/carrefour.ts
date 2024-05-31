@@ -17,7 +17,7 @@ export async function getProductosPorNombreCarrefour(name: string) {
     name
   );
 
-  await browser.goToPage(url);
+  // await browser.goToPage(url);
 
   const properties: SelectorProductos = {
     container:
@@ -32,9 +32,7 @@ export async function getProductosPorNombreCarrefour(name: string) {
     },
   };
 
-  await browser.waitForSelector(
-    ".vtex-product-summary-2-x-clearLink.vtex-product-summary-2-x-clearLink--contentProduct.h-100.flex.flex-column"
-  );
+  await browser.waitForSelector(".vtex-button.bg-action-primary.pointer");
 
   await browser.removeHTMLElement(".ot-floating-button.ot-hide");
   await browser.removeHTMLElement(
