@@ -48,7 +48,7 @@ export async function getProductosPorNombreCoto(name: string) {
   const properties: SelectorProductos = {
     container: "#products .clearfix",
     producto: {
-      url: "a[href]",
+      url: ".product_info_container a",
       nombre: ".span_productName div",
       imagen: "img",
       precio: ".rightList .atg_store_newPrice",

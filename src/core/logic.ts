@@ -130,7 +130,9 @@ export class Browser {
             const url = element
               .querySelector(producto.url)
               ?.getAttribute("href");
-            const nombre = element.querySelector(producto.nombre)?.textContent;
+            const nombre = element
+              .querySelector(producto.nombre)
+              ?.textContent?.trim();
             const imagen = element
               .querySelector(producto.imagen)
               ?.getAttribute("src");
@@ -147,11 +149,15 @@ export class Browser {
         producto
       );
 
+      // Limpieza de las URLs duplicadas
       results.forEach((result) => {
         if (result.url) {
-          result.url = this.url + result.url;
+          // Eliminar cualquier parte duplicada de la URL base
+          const url = new URL(result.url, this.url);
+          result.url = url.href;
         }
       });
+
       return results;
     } catch (error) {
       console.error("Error al obtener los resultados: ", error);
@@ -247,11 +253,6 @@ export class Browser {
         producto
       );
 
-      results.forEach((result) => {
-        if (result.url) {
-          result.url = this.url + result.url;
-        }
-      });
       return results;
     } catch (error) {
       console.error("Error al obtener los resultados: ", error);
