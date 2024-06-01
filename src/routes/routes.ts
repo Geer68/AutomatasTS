@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   getAlmacenCarrefour,
+  getBankPromotionsCarrefour,
   getProductosPorNombreCarrefour,
 } from "../core/carrefour.js";
 import {
@@ -23,6 +24,14 @@ router.get("/carrefour/searchByName", async (req, res) => {
   const name = req.query.name;
   const startTime = Date.now();
   const results = await getProductosPorNombreCarrefour(name);
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
+  res.send({ products: results });
+});
+router.get("/carrefour/getBankPromotions", async (req, res) => {
+  const startTime = Date.now();
+  const results = await getBankPromotionsCarrefour();
   const endTime = Date.now();
   const elapsedTimeInSeconds = (endTime - startTime) / 1000;
   console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");

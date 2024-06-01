@@ -28,8 +28,8 @@ export class Browser {
   public page: puppeteer.Page;
   public url: string;
 
-  constructor(url: string) {
-    this.url = url;
+  constructor(url?: string) {
+    this.url = url || "";
   }
 
   public setUrl(url: string) {
@@ -186,6 +186,10 @@ export class Browser {
     return this.page.url();
   }
 
+  public waitForNavigation() {
+    return this.page.waitForNavigation();
+  }
+
   public async getInputField(
     inputSelector: string,
     searchButton: string,
@@ -288,5 +292,73 @@ export class Browser {
       console.error("Error al interactuar con el campo de búsqueda:", error);
       throw error;
     }
+  }
+
+  public async getBankPromotionsCarrefour() {
+    await this.page.waitForSelector(
+      ".valtech-carrefourar-bank-promotions-0-x-promosContainer"
+    );
+    // await this.scrolearFin();
+
+    // Extraer los datos de cada promoción
+    const promotions = await this.page.evaluate(() => {
+      // Seleccionar todos los elementos de promociones
+      const promotionsElements = document.querySelectorAll(
+        ".valtech-carrefourar-bank-promotions-0-x-cardBox"
+      );
+      console.log("Promotions elements: ", promotionsElements);
+
+      // Función para limpiar el texto
+      const cleanText = (text) => {
+        return text ? text.trim().replace(/\s+/g, " ") : "";
+      };
+
+      const promotionsData = [];
+      promotionsElements.forEach((promoElement) => {
+        const dateText =
+          promoElement.querySelector(
+            ".valtech-carrefourar-bank-promotions-0-x-dateText"
+          )?.textContent || "";
+        const titleText =
+          promoElement.querySelector(
+            ".valtech-carrefourar-bank-promotions-0-x-ColRightTittle"
+          )?.textContent || "";
+        const descriptionText =
+          promoElement.querySelector(
+            ".valtech-carrefourar-bank-promotions-0-x-ColRightText"
+          )?.textContent || "";
+        const discountText =
+          promoElement.querySelector(
+            ".valtech-carrefourar-bank-promotions-0-x-ColLeftPercentageContainer"
+          )?.textContent || "";
+
+        const promotion = {
+          fecha: cleanText(dateText),
+          descripcion: cleanText(titleText),
+          detalle: cleanText(descriptionText),
+          descuento: cleanText(discountText),
+        };
+
+        promotionsData.push(promotion);
+      });
+
+      return promotionsData;
+    });
+
+    console.log("Promotions: ", promotions.length);
+    return promotions;
+  }
+
+  public async clicBankPromotionsButton() {
+    const linkSelector = "a.valtech-carrefourar-bank-promotions-0-x-menuItem";
+    await this.page.evaluate((linkSelector) => {
+      const links = Array.from(document.querySelectorAll(linkSelector));
+      const targetLink = links.find((link: HTMLAnchorElement) =>
+        link.innerText.includes("Por Banco/Tarjeta")
+      );
+      if (targetLink) {
+        (targetLink as HTMLAnchorElement).click();
+      }
+    }, linkSelector);
   }
 }

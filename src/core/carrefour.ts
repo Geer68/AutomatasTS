@@ -79,3 +79,21 @@ export async function getAlmacenCarrefour() {
   browser.close();
   return productos;
 }
+
+export async function getBankPromotionsCarrefour() {
+  const browser = new Browser(
+    "https://www.carrefour.com.ar/promociones-bancarias"
+  );
+  browser.setUrl("https://www.carrefour.com.ar/promociones-bancarias");
+
+  await browser.crearInstanciaNavegador();
+
+  await browser.waitForSelector(
+    ".valtech-carrefourar-bank-promotions-0-x-promosContainer"
+  );
+
+  const promotions = await browser.getBankPromotionsCarrefour();
+  console.log("PROMOCIONES: ", promotions);
+  browser.close();
+  return promotions;
+}
