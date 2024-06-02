@@ -35,7 +35,7 @@ router.get("/carrefour/getBankPromotions", async (req, res) => {
   const endTime = Date.now();
   const elapsedTimeInSeconds = (endTime - startTime) / 1000;
   console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
-  res.send({ products: results });
+  res.send({ promotions: results });
 });
 
 router.get("/changoMas", async (req, res) => {
