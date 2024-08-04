@@ -3,13 +3,18 @@ import { Router } from "express";
 import {
   getAlmacenCarrefour,
   getBankPromotionsCarrefour,
+  getCarruselCarrefour,
   getProductosPorNombreCarrefour,
 } from "../core/carrefour.js";
 import {
   getAlmacenChangoMas,
   getProductosPorNombreChangoMas,
 } from "../core/changoMas.js";
-import { getAlmacenVea, getProductosPorNombreVea } from "../core/vea.js";
+import {
+  getAlmacenVea,
+  getCarruselVea,
+  getProductosPorNombreVea,
+} from "../core/vea.js";
 import { getAlmacenAtomo, getProductosPorNombreAtomo } from "../core/atomo.js";
 import { getAlmacenCoto, getProductosPorNombreCoto } from "../core/coto.js";
 
@@ -37,6 +42,14 @@ router.get("/carrefour/getBankPromotions", async (req, res) => {
   console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ promotions: results });
 });
+router.get("/carrefour/carrusel", async (req, res) => {
+  const startTime = Date.now();
+  const results = await getCarruselCarrefour();
+  const endTime = Date.now();
+  const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+  console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
+  res.send({ ofertas: results });
+});
 
 router.get("/changoMas", async (req, res) => {
   const results = await getAlmacenChangoMas();
@@ -54,7 +67,6 @@ router.get("/changoMas/searchByName", async (req, res) => {
 });
 
 router.get("/vea", async (req, res) => {
-  //Eliminar el /almacen/ de la url
   const results = await getAlmacenVea();
   res.send({ products: results });
 });
@@ -66,6 +78,11 @@ router.get("/vea/searchByName", async (req, res) => {
   const elapsedTimeInSeconds = (endTime - startTime) / 1000;
   console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");
   res.send({ products: results });
+});
+router.get("/vea/carrusel", async (req, res) => {
+  // Problema en el String de la URl. Doble // y se replica el https (solo en dos->se debe corregir en logic? results.forEach((result))
+  const results = await getCarruselVea();
+  res.send({ ofertas: results });
 });
 
 router.get("/atomo", async (req, res) => {
@@ -103,14 +120,14 @@ router.get("/getProductFromAllStores", async (req, res) => {
   const name = req.query.name;
   const startTime = Date.now();
   try {
-    const [array1, array2, array3, array4, array5] = await Promise.all([
-      getProductosPorNombreCoto(name),
+    const [array1, array2, array3, array4] = await Promise.all([
+      // getProductosPorNombreCoto(name),
       getProductosPorNombreAtomo(name),
       getProductosPorNombreVea(name),
       getProductosPorNombreChangoMas(name),
       getProductosPorNombreCarrefour(name),
     ]);
-    const results = [...array1, ...array2, ...array3, ...array4, ...array5];
+    const results = [...array1, ...array2, ...array3, ...array4];
     const endTime = Date.now();
     const elapsedTimeInSeconds = (endTime - startTime) / 1000;
     console.log("Tiempo transcurrido:", elapsedTimeInSeconds, "segundos");

@@ -1,4 +1,4 @@
-import { Browser, SelectorProductos } from "./logic.js";
+import { Browser, SelectorImagenes, SelectorProductos } from "./logic.js";
 
 export async function getProductosPorNombreCarrefour(name: string) {
   const browser = new Browser("https://www.carrefour.com.ar/Almacen");
@@ -96,4 +96,30 @@ export async function getBankPromotionsCarrefour() {
   console.log("PROMOCIONES: ", promotions);
   browser.close();
   return promotions;
+}
+
+export async function getCarruselCarrefour() {
+  const browser = new Browser("https://www.carrefour.com.ar/");
+  browser.setUrl("https://www.carrefour.com.ar/");
+
+  await browser.crearInstanciaNavegador();
+
+  await browser.waitForSelector(".vtex-slider-layout-0-x-slide--carousel");
+
+  await browser.awaitForTime(2000);
+
+  const properties: SelectorImagenes = {
+    container: ".vtex-slider-layout-0-x-slide--carousel",
+    imagen: {
+      url: "a.vtex-slider-layout-0-x-imageElementLink--carousel",
+      jpg: "img.vtex-slider-layout-0-x-imageElement--carousel",
+    },
+  };
+
+  const productos = await browser.getResultadosCarrusel({
+    selector: properties,
+  });
+
+  browser.close();
+  return productos;
 }

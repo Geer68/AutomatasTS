@@ -1,4 +1,4 @@
-import { Browser, SelectorProductos } from "./logic.js";
+import { Browser, SelectorProductos, SelectorImagenes } from "./logic.js";
 
 export async function getAlmacenVea() {
   const browser = new Browser("https://www.vea.com.ar/almacen");
@@ -61,6 +61,30 @@ export async function getProductosPorNombreVea(name: string) {
   await browser.scrolearFin();
   const productos = await browser.getResultados({ selector: properties });
   console.log("CANT PROD: ", productos.length);
+  browser.close();
+  return productos;
+}
+
+export async function getCarruselVea() {
+  const browser = new Browser("https://www.vea.com.ar");
+  browser.setUrl("https://www.vea.com.ar");
+
+  await browser.crearInstanciaNavegador();
+
+  await browser.waitForSelector(".slick-track");
+
+  const properties: SelectorImagenes = {
+    container: ".slick-slide",
+    imagen: {
+      url: ".slick-slide a",
+      jpg: ".slick-slide img",
+    },
+  };
+
+  const productos = await browser.getResultadosCarrusel({
+    selector: properties,
+  });
+
   browser.close();
   return productos;
 }

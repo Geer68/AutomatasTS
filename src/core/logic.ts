@@ -11,6 +11,19 @@ export type SelectorProductos = {
   };
 };
 
+export type Imagen = {
+  url: string;
+  jpg: string;
+};
+
+export type SelectorImagenes = {
+  container: string;
+  imagen: {
+    url: string;
+    jpg: string;
+  };
+};
+
 function delay(time) {
   return new Promise(function (resolve) {
     setTimeout(resolve, time);
@@ -360,5 +373,48 @@ export class Browser {
         (targetLink as HTMLAnchorElement).click();
       }
     }, linkSelector);
+  }
+
+  public async awaitForTime(time: number) {
+    await delay(time);
+  }
+
+  async getResultadosCarrusel({
+    selector,
+  }: {
+    selector: SelectorImagenes;
+  }): Promise<Imagen[]> {
+    try {
+      const { container, imagen } = selector;
+      const results = await this.page.evaluate(
+        (container, imagen) => {
+          const elements = document.querySelectorAll(container);
+          const results = [];
+
+          elements.forEach((element) => {
+            const aElement = element.querySelector(imagen.url);
+            const imgElement = element.querySelector(imagen.jpg);
+
+            const url = aElement ? aElement.getAttribute("href") : null;
+            const jpg = imgElement ? imgElement.getAttribute("src") : null;
+
+            results.push({ url, jpg });
+          });
+          return results;
+        },
+        container,
+        imagen
+      );
+
+      results.forEach((result) => {
+        if (result.url) {
+          result.url = this.url + result.url;
+        }
+      });
+      return results;
+    } catch (error) {
+      console.error("Error al obtener los resultados: ", error);
+      return [];
+    }
   }
 }
